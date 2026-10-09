@@ -83,7 +83,7 @@ language sql stable security definer set search_path = public as $$
   select r.rk,
          case when r.board_hide and r.user_id <> auth.uid() then 'Student ' || lpad(r.student_no::text, 6, '0')
               else split_part(trim(r.name), ' ', 1) end,
-         case when r.board_hide and r.user_id <> auth.uid() then '🙂' else coalesce(r.avatar, '🙂') end,
+         case when r.board_hide and r.user_id <> auth.uid() then null else r.avatar end,
          r.pts, r.user_id = auth.uid()
   from r
   where r.rk <= 10 or r.user_id = auth.uid()
@@ -97,4 +97,4 @@ grant execute on function public.points_board() to authenticated;
 
 notify pgrst, 'reload schema';
 
-select 'Points setup v5 finished ✅' as status;
+select 'Points setup v5 finished - OK' as status;
